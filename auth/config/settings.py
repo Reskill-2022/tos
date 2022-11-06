@@ -4,7 +4,7 @@ import os
 import json
 from decouple import config
 
-# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "./auth/config/lexical-sol-361019-5ab9cc34711e.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "./auth/config/lexical-sol-361019-859206d82a0d.json"
 
 client = bigquery.Client()
 

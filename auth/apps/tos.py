@@ -21,23 +21,23 @@ async def read_root(data:TOS, request:Request, response:Response):
 
   # Hash email from user
   hashed = str(hasher(data.email))
-  print("hashed", hashed)
+
   # Check if hashed email is in cookies keys
-  if hashed in cookies.keys():
-    return RedirectResponse(url=f'{config("FRONTEND_URL")}', status_code=302)
+  if hashed in cookies.values():
+    return RedirectResponse(url=f'{config("LOGIN_URL")}', status_code=302)
 
   if data.email == "" or data.tos_accepted != True:
     raise HTTPException(status_code=400, detail="Please fill all fields")
 
 
-  # check if email exists
-  email_checker = list(execute( f"SELECT * FROM `lexical-sol-361019.RA_TOS_SURVEY.tos` WHERE cookie_hash = '{hashed}'"))
+  # # check if email exists
+  # email_checker = list(execute( f"SELECT * FROM `lexical-sol-361019.RA_TOS_SURVEY.tos` WHERE cookie_hash = '{hashed}'"))
 
-  # get email count from email_checker
-  email = [email["email"] for email in email_checker[0][1]]
+  # # get email count from email_checker
+  # email = [email["email"] for email in email_checker[0][1]]
 
-  if len(email_checker) > 0 and len(email) > 0 :
-    return {"email_exist":email_checker[0][0], "email":email}
+  # if len(email_checker) > 0 and len(email) > 0 :
+  #   return {"email_exist":email_checker[0][0], "email":email}
 
   # insert data
   try:
@@ -51,8 +51,8 @@ async def read_root(data:TOS, request:Request, response:Response):
             '{data.updated_at}', \
               '{hashed}')")
     
-    response.set_cookie(key=f"{hashed}", 
-                        value="accepted", 
+    response.set_cookie(key="email", 
+                        value=f"{hashed}", 
                         max_age=604800
                         )
 
@@ -78,7 +78,7 @@ async def get_user_email(email:str, request:Request, response:Response):
 
   # Check if hashed email is in cookies keys
   if hashed in cookies.keys():
-    return RedirectResponse(url=f'{config("FRONTEND_URL")}', status_code=302)
+    return RedirectResponse(url=f'{config("LOGIN_URL")}', status_code=302)
 
   # check if email exists
   email_checker = list(execute( f"SELECT * FROM `lexical-sol-361019.RA_TOS_SURVEY.tos` WHERE cookie_hash = '{hashed}'"))
@@ -87,10 +87,10 @@ async def get_user_email(email:str, request:Request, response:Response):
   email = [email["email"] for email in email_checker[0][1]]
 
   if len(email_checker) > 0 and len(email) > 0 :
-    response.set_cookie(key=f"{hashed}", 
-                    value="accepted", 
+    response.set_cookie(key="email", 
+                    value=f"{hashed}", 
                     max_age=604800
                     )
     return {"email_exist":email_checker[0][0], "email":email}
 
-  return {"message": "Email does not exist", "data":email_checker}
+  return RedirectResponse(url=f'{config("FRONTEND_URL")}', status_code=302)
