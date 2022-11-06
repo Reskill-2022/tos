@@ -9,7 +9,7 @@ from auth.Helpers.helpers import get_cookies, hasher
 app = APIRouter()
 
 
-@app.post("/terms-of-service")
+@app.post("/tos/terms-of-service")
 async def read_root(data:TOS, request:Request, response:Response):
   """
   
@@ -65,7 +65,7 @@ async def read_root(data:TOS, request:Request, response:Response):
 
 
 # endpoint to get user email
-@app.get("/{email}/terms-of-service")
+@app.get("/tos/{email}/terms-of-service")
 async def get_user_email(email:str, request:Request, response:Response):
   """
   Get user email

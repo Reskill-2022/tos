@@ -24,7 +24,7 @@ app.add_middleware(
 app.include_router(tos,tags=["tos"])
 # app.include_router(survey,tags=["survey"])
 
-@app.get("/health")
+@app.get("/tos/health")
 async def root():
     return "Healthy"
 
