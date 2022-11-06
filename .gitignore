@@ -1,0 +1,7 @@
+__pycache__/
+Pipfile
+Pipfile.lock
+.env
+lexical-sol-361019-5ab9cc34711e.json
+5ab9cc34711e.json
+venv/
