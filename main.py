@@ -12,7 +12,7 @@ app = FastAPI(
     title="TOS API",
     description="provides acces to store user email after they accept terms of service",
     version="1.0",
-    docs_url='/docs',
+    docs_url='/tos/docs',
     openapi_url='/openapi.json', # This line solved my issue, in my case it was a lambda function
     redoc_url=None)
 
