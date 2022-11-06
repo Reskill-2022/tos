@@ -12,7 +12,14 @@ app = APIRouter()
 @app.post("/tos/terms-of-service")
 async def read_root(data:TOS, request:Request, response:Response):
   """
-  
+
+  This endpoint is used to store user email after they accept terms of service
+    then set a cookie to the user browser to prevent them from seeing the terms of service again
+
+  Args:
+
+      - email: [This is the email of the user. It is a required string field]
+      - tos_accpted: [This is the terms of service accepted by the user. It is a required boolean value]
   """
   # check if all fields are filled
 
@@ -68,7 +75,8 @@ async def read_root(data:TOS, request:Request, response:Response):
 @app.get("/tos/{email}/terms-of-service")
 async def get_user_email(email:str, request:Request, response:Response):
   """
-  Get user email
+  This endpoint is used to check if the user has accepted terms of service
+  and then set the cookie to the user email
   """
   # get cookies from request
   cookies = get_cookies(request)
