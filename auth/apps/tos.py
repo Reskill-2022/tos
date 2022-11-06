@@ -31,20 +31,24 @@ async def read_root(data:TOS, request:Request, response:Response):
 
   # Check if hashed email is in cookies keys
   if hashed in cookies.values():
-    return RedirectResponse(url=f'{config("LOGIN_URL")}', status_code=302)
+    return {"message":"You have already accepted the terms of service"}
 
   if data.email == "" or data.tos_accepted != True:
     raise HTTPException(status_code=400, detail="Please fill all fields")
 
 
-  # # check if email exists
-  # email_checker = list(execute( f"SELECT * FROM `lexical-sol-361019.RA_TOS_SURVEY.tos` WHERE cookie_hash = '{hashed}'"))
+  # check if email exists
+  email_checker = list(execute( f"SELECT * FROM `lexical-sol-361019.RA_TOS_SURVEY.tos` WHERE cookie_hash = '{hashed}'"))
 
-  # # get email count from email_checker
-  # email = [email["email"] for email in email_checker[0][1]]
+  # get email count from email_checker
+  email = [email["email"] for email in email_checker[0][1]]
 
-  # if len(email_checker) > 0 and len(email) > 0 :
-  #   return {"email_exist":email_checker[0][0], "email":email}
+  if len(email_checker) > 0 and len(email) > 0 :
+    response.set_cookie(key="email", 
+                    value=f"{hashed}", 
+                    max_age=604800
+                    )
+    return "You have already accepted the terms of service"
 
   # insert data
   try:
