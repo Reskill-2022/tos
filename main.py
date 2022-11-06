@@ -8,15 +8,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from auth.apps.tos import app as tos
 # from auth.apps.survey import app as survey
 
+load_dotenv() 
+
+
 app = FastAPI(    
     title="TOS API",
     description="provides acces to store user email after they accept terms of service",
-    version="1.0",
-    docs_url='/tos/docs',
-    openapi_url='/openapi.json', # This line solved my issue, in my case it was a lambda function
-    redoc_url=None)
+    docs_url='/tos/docs')
 
-load_dotenv() 
 
 origins = ["*"]
 app.add_middleware(
