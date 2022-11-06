@@ -24,6 +24,9 @@ app.add_middleware(
 app.include_router(tos,tags=["tos"])
 # app.include_router(survey,tags=["survey"])
 
+@app.get("/health")
+async def root():
+    return "Healthy"
 
 if __name__ == "__main__":
     uvicorn.run("main:app", port=7001, reload=True)
