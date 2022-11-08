@@ -49,3 +49,26 @@ async def read_root(data:TOS,):
   except Exception as e:
     raise HTTPException(status_code=400, detail={"message": "Something went wrong", "data":e})
 
+
+# endpoint to check if user email exists
+@app.get("/tos/survey/{email}")
+async def read_root(email:str):
+  """
+
+  This endpoint is used to check if user email exists
+
+  Args:
+
+      - email: [This is the email of the user. It is a required string field]
+  """
+
+  # check if email exists
+  email_checker = list(execute( f"SELECT * FROM `lexical-sol-361019.2022_survey_export.intro_phase` WHERE email = '{email}'"))
+
+  # get email count from email_checker
+  email = [email["email"] for email in email_checker[0][1]]
+
+  if len(email_checker) > 0 and len(email) > 0 :
+    return {"bool": True, "message": "Email exists"}
+
+  return {"bool": False, "message": "Email does not exist"}
