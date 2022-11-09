@@ -5,6 +5,8 @@ from auth.config.settings import execute
 
 app = APIRouter()
 
+table_name="`lexical-sol-361019.2022_survey_export.intro_phase_scheduled_fetch`"
+table_name = "`lexical-sol-361019.2022_survey_export.intro_phase`"
 
 @app.post("/tos/terms-of-service")
 async def read_root(data:TOS,):
@@ -63,7 +65,7 @@ async def read_root(email:str):
   """
 
   # check if email exists
-  email_checker = list(execute( f"SELECT * FROM `lexical-sol-361019.2022_survey_export.intro_phase_scheduled_fetch` WHERE email_address = '{email}'"))
+  email_checker = list(execute( f"SELECT * FROM {table_name} WHERE email_address = '{email}'"))
 
   # get email count from email_checker
   email = [email["email_address"] for email in email_checker[0][1]]
@@ -71,4 +73,4 @@ async def read_root(email:str):
   if len(email_checker) > 0 and len(email) > 0 :
     return {"survey_filled": True, "message": "Email exists"}
 
-  return {"survey_filled": False, "message": "Email does not exist"}
+  raise HTTPException(status_code=404, detail={"survey_filled": False, "message": "Email does not exist"})
