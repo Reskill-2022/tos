@@ -6,6 +6,8 @@ from google.oauth2 import service_account
 
 from decouple import config
 
+API_KEY=config("API_KEY")
+LOGIN_URL = config("LOGIN_URL")
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "./auth/config/lexical-sol-361019-859206d82a0d.json"
 credentials = service_account.Credentials.from_service_account_file(
     './auth/config/lexical-sol-361019-859206d82a0d.json' )

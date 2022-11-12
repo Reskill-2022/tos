@@ -1,6 +1,8 @@
 from fastapi import  APIRouter, HTTPException
 from auth.schemas.tos_schema import TOS
-from auth.config.settings import execute
+from auth.config.settings import execute, API_KEY, LOGIN_URL
+import requests
+
 
 
 app = APIRouter()
@@ -64,13 +66,40 @@ async def read_root(email:str):
       - email: [This is the email of the user. It is a required string field]
   """
 
+  is_oktam_mail =await get_user(email)
   # check if email exists
   email_checker = list(execute( f"SELECT * FROM {table_name} WHERE email_address = '{email}'"))
 
   # get email count from email_checker
   email = [email["email_address"] for email in email_checker[0][1]]
 
-  if len(email_checker) > 0 and len(email) > 0 :
-    return {"survey_filled": True, "message": "Email exists"}
+  if is_oktam_mail:
 
-  raise HTTPException(status_code=404, detail={"survey_filled": False, "message": "Email does not exist"})
+    if len(email_checker) > 0 and len(email) > 0:
+      return {"survey_filled": True, "message": "Email exists"}
+    
+    raise HTTPException(404, {"survey_filled": False, "message": "We do not recognise by this email address. Kindily fill the form again with the email address you use in signing into okta."})
+  raise HTTPException(404, {"Okta_email": False, "message": "Okta does not recognise you by this mail. Kindily fill the form again with the email address you use in signing into okta."})
+
+
+
+
+# check if user email exists in okta
+async def get_user(email):
+
+  url = f"{LOGIN_URL}/api/v1/users?q={email}&limit=1"
+
+  headers = {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+    "Authorization": f"SSWS {API_KEY}"
+  }
+
+  response = requests.request("GET", url, headers=headers)
+
+  if response.json() == []:
+    return False
+
+  return True
+
+
