@@ -55,7 +55,7 @@ async def read_root(data:TOS,):
 
 
 # endpoint to check if user email exists
-@app.get("/tos/survey/{email}")
+@app.get("/tos/okta/{email}")
 async def read_root(email:str):
   """
 
@@ -67,20 +67,35 @@ async def read_root(email:str):
   """
 
   is_oktam_mail =await get_user(email)
+
+
+  if is_oktam_mail:
+        return {"is_otka_mail": True, "message": "Email exists"}
+
+  raise HTTPException(404, {"Okta_email": False, "message": "Okta does not recognise you by this mail. Kindily fill the form again with the email address you use in signing into okta."})
+
+
+@app.get("/tos/survey/{email}")
+async def read_suvey_mai(email:str):
+  """
+
+  This endpoint is used to check if user email exists
+
+  Args:
+
+      - email: [This is the email of the user. It is a required string field]
+  """
+
   # check if email exists
   email_checker = list(execute( f"SELECT * FROM {table_name} WHERE email_address = '{email}'"))
 
   # get email count from email_checker
   email = [email["email_address"] for email in email_checker[0][1]]
 
-  if is_oktam_mail:
-
-    if len(email_checker) > 0 and len(email) > 0:
-      return {"survey_filled": True, "message": "Email exists"}
-    
-    raise HTTPException(404, {"survey_filled": False, "message": "We do not recognise by this email address. Kindily fill the form again with the email address you use in signing into okta."})
-  raise HTTPException(404, {"Okta_email": False, "message": "Okta does not recognise you by this mail. Kindily fill the form again with the email address you use in signing into okta."})
-
+  if len(email_checker) > 0 and len(email) > 0:
+    return {"is_survey_filled": True, "message": "Email exists"}
+  
+  raise HTTPException(404, {"survey_filled": False, "message": "We do not recognise by this email address. Kindily fill the form again with the email address you use in signing into okta."})
 
 
 
