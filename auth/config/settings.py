@@ -29,7 +29,7 @@ def execute(query):
   query_job = client.query(query)
 
   if query_job.result():
-    yield query_job.done(),query_job.result()
+    return query_job.done(),query_job.result()
 
 
 
