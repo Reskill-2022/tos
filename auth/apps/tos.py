@@ -133,7 +133,7 @@ async def read_suvey_mai(email:str):
   email_checker = list(execute( f"SELECT * FROM {table_name} WHERE email_address = '{email}'"))
 
   # get email count from email_checker
-  email = [email["email_address"] for email in email_checker[0][1]]
+  email = [email for email in email_checker[1]]
 
   if len(email_checker) > 0 and len(email) > 0:
     return {"is_survey_filled": True, "message": "Email exists"}
